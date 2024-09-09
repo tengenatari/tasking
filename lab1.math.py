@@ -7,6 +7,12 @@ def matrix_input():
     return matrix
 
 
+def pick_abs(row: list[float]):
+    row = row[:len(row) - 1]
+    if abs(max(row)) > abs(min(row)):
+        return row.index(max(row))
+    return row.index(min(row))
+
 def vector_input():
     vector = list(map(float, input().split()))
     return vector
@@ -26,8 +32,6 @@ def first_move(matrix: list[list]):
     return matrix
 
 
-
-
 def check_row(matrix: list[list], ind: int):
     if len(matrix[ind]) - matrix[ind].count(0) == 2:
         return True
@@ -36,6 +40,22 @@ def check_row(matrix: list[list], ind: int):
         return False
     print('Many solutions')
     return False
+
+
+def wme_move(matrix: list[list]):
+    for i in range(len(matrix)):
+
+        ind = pick_abs(matrix[i])
+        if matrix[i][ind] == 0:
+            print('Many solutions')
+            return matrix
+        matrix[i] = list(map(lambda x: x / matrix[i][ind], matrix[i]))
+        print(matrix[i])
+        for j in range(len(matrix)):
+            if j != i:
+                for k in range(len(matrix[0])):
+                    matrix[j][k] -= matrix[j][ind] * matrix[i][k] / matrix[i][ind]
+    return matrix
 
 
 def second_move(matrix: list[list]):
@@ -50,19 +70,39 @@ def second_move(matrix: list[list]):
     return matrix
 
 
-mat = matrix_input()
+def gauss_solution():
+    mat = matrix_input()
 
-vec = vector_input()
+    vec = vector_input()
+    matrix = mat.copy()
+    mat = first_move(merge_mat_vec(mat, vec))
 
-mat = first_move(merge_mat_vec(mat, vec))
+    for row in mat:
+        print(*row)
 
-for row in mat:
-    print(*row)
+    mat = second_move(mat)
+
+    for row in mat:
+        print(*row)
+    solution_vector = []
+    for x in mat:
+        solution_vector.append(x[-1])
+    return solution_vector, matrix
 
 
-mat = second_move(mat)
+def gauss_solution_wme():
 
-for row in mat:
-    print(*row)
+    mat = matrix_input()
+
+    vec = vector_input()
+    matrix = mat.copy()
+
+    mat = wme_move(merge_mat_vec(mat, vec))
+    for row in mat:
+        print(*row)
+    return mat
 
 
+gauss_solution_wme()
+
+gauss_solution()

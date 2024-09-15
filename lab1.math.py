@@ -196,7 +196,8 @@ def matrixmult (A, B):
             for k in range(len(B)):
                 C[i][j] += A[i][k]*B[k][j]
     return C
-
+def count_e2(matrix):
+    return sum([sum(list(map(lambda x: x ** 2, y))) for y in matrix]) ** (1 / 2)
 task1234()
 a = count_inv(b := matrix_input())
 print('Inv matrix')
@@ -206,3 +207,16 @@ mat = matrixmult(a, b)
 print('Matrix multiplication(nevyazka po obr matrix)')
 print(mat)
 
+print('v(A)=', count_e2(a)*count_e2(b))
+
+matrixxx = matrix_input()
+vec = vector_input()
+dv = [0.1 * x**2 + 0.01*x + 0.0001 + vec[x] for x in range(len(vec))]
+print("with op element")
+print(vector_nev := count_nevyazka(*gauss_solution(copy.deepcopy(matrixxx), vec)))
+print(vector_nev2 := count_nevyazka(*gauss_solution(copy.deepcopy(matrixxx), dv)))
+print("dx/x= ", count_e(vector_nev2)/count_e(vector_nev))
+print("V(a) db/b = ", count_e(dv)/count_e(vec)* count_e2(matrixxx) * count_e2(count_inv(matrixxx)))
+print('Morma Nevyazka')
+print(count_e(vector_nev))
+print(count_e(vector_nev2))

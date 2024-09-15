@@ -109,7 +109,7 @@ def gauss_solution(mat: list[list] = None, vec: list = None):
     for x in mat:
         solution_vector.append(x[-1])
     print('Solution vector:', solution_vector)
-    return solution_vector, matrix, mat1
+    return solution_vector, matrix, mat1, vec
 
 
 def gauss_solution_wme():
@@ -133,14 +133,14 @@ def gauss_solution_wme():
         solution_vector.append(dic[x])
 
     print('Solution_vector: ', solution_vector)
-    return solution_vector, matrix, mat
+    return solution_vector, matrix, mat, vec
 
 
-def count_nevyazka(vector: list, matrix: list[list], *args):
-    new_vector = copy.deepcopy(vector)
+def count_nevyazka(vector: list, matrix: list[list], mat, b):
+    new_vector = copy.deepcopy(b)
     for x in range(len(matrix)):
         for y in range(len(matrix[0])):
-            new_vector[y] -= matrix[x][y] * vector[y]
+            new_vector[x] -= matrix[x][y] * vector[y]
 
     return new_vector
 
@@ -155,7 +155,7 @@ def count_e(vector: list, *args):
 def count_det(mat: list[list] = None):
     if not mat:
         mat = matrix_input()
-    _, _, mat = gauss_solution(mat.copy())
+    _, _, mat, _ = gauss_solution(mat.copy())
     det = 1
     for x in range(len(mat)):
         det *= mat[x][x]
@@ -164,23 +164,45 @@ def count_det(mat: list[list] = None):
 
 
 def count_inv(mat: list[list] = None):
-    inv_mat = [[0] * len(mat) for x in range(len(mat))]
+    inv_mat = [[0] * len(mat) for _ in range(len(mat))]
     vector = [0] * len(mat)
     vector[-1] = 1
-    for x in range(len(mat)):
-        vector[x] = 1
-        vector[x - 1] -= 1
-        sol_vector, _, _ = gauss_solution(copy.deepcopy(mat), vector.copy())
-        print(mat)
+
+    for k in range(len(mat)):
+        vector[k] = 1
+        vector[k - 1] -= 1
+        sol_vector, _, _, _ = copy.deepcopy(gauss_solution(copy.deepcopy(mat), vector))
+
         for y in range(len(sol_vector)):
-            inv_mat[y][x] = sol_vector[y]
+            inv_mat[y][k] = sol_vector[y]
+
     return inv_mat
 
 def task1234():
+    print('Gauss method')
     print(vector_nev := count_nevyazka(*gauss_solution_wme()))
+    print('Morma Nevyazka')
     print(count_e(vector_nev))
+    print("with op element")
     print(vector_nev := count_nevyazka(*gauss_solution()))
+    print('Morma Nevyazka')
     print(count_e(vector_nev))
 
+
+def matrixmult (A, B):
+    C = [[0 for row in range(len(A))] for col in range(len(B[0]))]
+    for i in range(len(A)):
+        for j in range(len(B[0])):
+            for k in range(len(B)):
+                C[i][j] += A[i][k]*B[k][j]
+    return C
+
 task1234()
-count_inv(matrix_input())
+a = count_inv(b := matrix_input())
+print('Inv matrix')
+for x in range(len(a)):
+    print(*a[x])
+mat = matrixmult(a, b)
+print('Matrix multiplication(nevyazka po obr matrix)')
+print(mat)
+

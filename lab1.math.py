@@ -1,6 +1,12 @@
 import copy
 import numpy
 
+def razn(a, b):
+    new_vec = [0]*len(a)
+    for x in range(len(a)):
+        new_vec[x] = a[x] - b[x]
+    return new_vec
+
 
 def pick_row(matrix: list[list], ind):
     for x in range(ind, len(matrix)):
@@ -98,9 +104,11 @@ def gauss_solution(mat: list[list] = None, vec: list = None):
     print(mat)
     mat = first_move(merge_mat_vec(mat, vec))
     mat1 = copy.deepcopy(mat)
+
+    print('Прямой ход')
     for row in mat:
         print(*row)
-
+    print('Обратный ход')
     mat = second_move(mat)
 
     for row in mat:
@@ -120,6 +128,7 @@ def gauss_solution_wme():
     matrix = copy.deepcopy(mat)
 
     mat = wme_move(merge_mat_vec(mat, vec))
+
     for row in mat:
         print(*row)
     dic = dict()
@@ -128,10 +137,10 @@ def gauss_solution_wme():
             if mat[x][y] != 0:
                 dic[y] = mat[x][-1]
     solution_vector = []
-    print(dic)
+
     for x in range(len(dic)):
         solution_vector.append(dic[x])
-
+    print()
     print('Solution_vector: ', solution_vector)
     return solution_vector, matrix, mat, vec
 
@@ -179,15 +188,17 @@ def count_inv(mat: list[list] = None):
     return inv_mat
 
 def task1234():
-    print('Gauss method')
+    print('op element')
     print(vector_nev := count_nevyazka(*gauss_solution_wme()))
+    print()
     print('Morma Nevyazka')
+
     print(count_e(vector_nev))
-    print("with op element")
+    print("Gauss Method")
     print(vector_nev := count_nevyazka(*gauss_solution()))
     print('Morma Nevyazka')
     print(count_e(vector_nev))
-
+    print()
 
 def matrixmult (A, B):
     C = [[0 for row in range(len(A))] for col in range(len(B[0]))]
@@ -198,25 +209,21 @@ def matrixmult (A, B):
     return C
 def count_e2(matrix):
     return sum([sum(list(map(lambda x: x ** 2, y))) for y in matrix]) ** (1 / 2)
-task1234()
-a = count_inv(b := matrix_input())
-print('Inv matrix')
-for x in range(len(a)):
-    print(*a[x])
-mat = matrixmult(a, b)
-print('Matrix multiplication(nevyazka po obr matrix)')
-print(mat)
 
-print('v(A)=', count_e2(a)*count_e2(b))
 
 matrixxx = matrix_input()
 vec = vector_input()
 dv = [0.1 * x**2 + 0.01*x + 0.0001 + vec[x] for x in range(len(vec))]
+print(dv)
 print("with op element")
-print(vector_nev := count_nevyazka(*gauss_solution(copy.deepcopy(matrixxx), vec)))
-print(vector_nev2 := count_nevyazka(*gauss_solution(copy.deepcopy(matrixxx), dv)))
-print("dx/x= ", count_e(vector_nev2)/count_e(vector_nev))
-print("V(a) db/b = ", count_e(dv)/count_e(vec)* count_e2(matrixxx) * count_e2(count_inv(matrixxx)))
+smth = gauss_solution(copy.deepcopy(matrixxx), vec)
+smth1 = gauss_solution(copy.deepcopy(matrixxx), dv)
+print(vector_nev := count_nevyazka(*smth))
+print(vector_nev2 := count_nevyazka(*smth))
+print('dx = ', razn(smth[0], smth1[0]))
+print('x = ', smth[0])
+print("dx/x= ", count_e(razn(smth[0], smth1[0]))/count_e(smth[0]))
+print("V(a) db/b = ", count_e(razn(dv, vec))/count_e(vec))
 print('Morma Nevyazka')
 print(count_e(vector_nev))
 print(count_e(vector_nev2))

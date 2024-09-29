@@ -18,6 +18,7 @@ def LU(A):
                 U[j][i] = A[i][j] - sum(list(map(lambda x, y: x * y, L[i][:i], U[j][:i])))
             else:
                 L[i][j] = (A[i][j] - sum(list(map(lambda x, y: x * y, L[i][:j], U[j][:j]))))/ U[j][j]
+
     return L, U
 
 def move(matrix):
@@ -29,7 +30,12 @@ def move(matrix):
             return matrix
         matrix[i][-1] = matrix[i][-1] / matrix[i][i]
         matrix[i][i] = 1.
-    return matrix
+    solution_vector = []
+    for row in matrix:
+        print(*row)
+    for x in matrix:
+        solution_vector.append(x[-1])
+    return solution_vector
 
 
 def pick_row(matrix: list[list], ind):
@@ -89,7 +95,12 @@ def check_row(matrix: list[list], ind: int):
         print('Many solutions')
         return False
     return True
-
+def transpose(n_matrix: list[list]):
+    matrix = copy.deepcopy(n_matrix)
+    for i in range(len(matrix)):
+        for j in range(i, len(matrix[0])):
+            matrix[j][i], matrix[i][j] = matrix[i][j], matrix[j][i]
+    return matrix
 
 def wme_move(matrix: list[list]):
     for i in range(len(matrix)):
@@ -255,11 +266,33 @@ print(count_e(vector_nev2))
 
 matrixxx = matrix_input()
 L, U = LU(matrixxx)
+print('матрица L')
 for x in range(len(matrixxx)):
     print(*L[x])
+U = transpose(U)
+print()
+print('матрица U')
 for x in range(len(matrixxx)):
     print(*U[x])
-U = np.transpose(U)
-print(np.matmul(L, U))
+print()
+print('LU = A')
+print(matrixmult(L, U))
 vec = vector_input()
-move(merge_mat_vec(U, vec))
+print()
+L = L[::-1]
+
+for x in range(len(matrixxx)):
+    L[x] = L[x][::-1]
+
+new_vec = vec[::-1]
+new_vec = move(merge_mat_vec(L, new_vec))
+print('Ly = b')
+print(new_vec)
+print()
+new_vec = new_vec[::-1]
+sol_vec = move(merge_mat_vec(U, new_vec))
+print('Ux = y')
+print(sol_vec)
+
+print('невязка')
+print(vector_nev := count_nevyazka(sol_vec, matrixxx, 0, vec))

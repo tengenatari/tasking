@@ -1,11 +1,35 @@
 import copy
-import numpy
+import numpy as np
 
 def razn(a, b):
     new_vec = [0]*len(a)
     for x in range(len(a)):
         new_vec[x] = a[x] - b[x]
     return new_vec
+
+def LU(A):
+    L = [[0] * len(A) for _ in range(len(A))]
+    U = [[0] * len(A) for _ in range(len(A))]
+    for x in range(len(A)):
+        L[x][x] = 1
+    for i in range(len(A)):
+        for j in range(len(A)):
+            if i <= j:
+                U[j][i] = A[i][j] - sum(list(map(lambda x, y: x * y, L[i][:i], U[j][:i])))
+            else:
+                L[i][j] = (A[i][j] - sum(list(map(lambda x, y: x * y, L[i][:j], U[j][:j]))))/ U[j][j]
+    return L, U
+
+def move(matrix):
+    for i in range(len(matrix) - 1, -1, -1):
+        for j in range(i + 1, len(matrix[0]) - 1):
+            matrix[i][-1] -= matrix[j][-1] * matrix[i][j]
+            matrix[i][j] = 0.
+        if not check_row(matrix, i):
+            return matrix
+        matrix[i][-1] = matrix[i][-1] / matrix[i][i]
+        matrix[i][i] = 1.
+    return matrix
 
 
 def pick_row(matrix: list[list], ind):
@@ -210,8 +234,8 @@ def matrixmult (A, B):
 def count_e2(matrix):
     return sum([sum(list(map(lambda x: x ** 2, y))) for y in matrix]) ** (1 / 2)
 
+"""
 
-matrixxx = matrix_input()
 vec = vector_input()
 dv = [0.1 * x**2 + 0.01*x + 0.0001 + vec[x] for x in range(len(vec))]
 print(dv)
@@ -227,3 +251,15 @@ print("V(a) db/b = ", count_e(razn(dv, vec))/count_e(vec))
 print('Morma Nevyazka')
 print(count_e(vector_nev))
 print(count_e(vector_nev2))
+"""
+
+matrixxx = matrix_input()
+L, U = LU(matrixxx)
+for x in range(len(matrixxx)):
+    print(*L[x])
+for x in range(len(matrixxx)):
+    print(*U[x])
+U = np.transpose(U)
+print(np.matmul(L, U))
+vec = vector_input()
+move(merge_mat_vec(U, vec))

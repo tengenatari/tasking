@@ -2,6 +2,14 @@ import copy
 import numpy as np
 
 
+def mu(matrix):
+    max_ = -1000000000000
+    for i in range(len(matrix)):
+        if (1 - sum(list(map(abs, matrix[i][:i])))) != 0:
+            max_ = max(max_, sum(list(map(abs, matrix[i][i:])))/(1 - sum(list(map(abs, matrix[i][:i])))))
+    return max_
+
+
 def alpha(matrix: list[list], vector: list):
     matrix = copy.deepcopy(matrix)
     vector = copy.deepcopy(vector)
@@ -175,11 +183,14 @@ def main(easy=True):
     print('Решаем систему уравнений')
 
     print('Метод простых итераций')
-    print(solution := solve_easy_iteration(matrix_s, vector_s, min(eps)/(1 - min(eps)) * 10**(-4)))
+    print('q = ', eps)
+    print(solution := solve_easy_iteration(matrix_s, vector_s, (1 - min(eps))/min(eps) * 10**(-4)))
     cont_sol(solution)
     print()
     print('Метод Зейделя')
-    print(solution := solve_zeidel(matrix_s, vector_s, min(eps)/(1 - min(eps)) * 10**(-4)))
+    eps = mu(matrix_s)
+    print('mu', eps)
+    print(solution := solve_zeidel(matrix_s, vector_s, (1 - eps)/eps * 10**(-4)))
     cont_sol(solution)
     print()
 

@@ -184,9 +184,6 @@ def main(easy=True):
     print()
 
 
-
-
-
 main(easy=False)
 
 

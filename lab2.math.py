@@ -175,11 +175,11 @@ def main(easy=True):
     print('Решаем систему уравнений')
 
     print('Метод простых итераций')
-    print(solution := solve_easy_iteration(matrix_s, vector_s, min(eps) * 10**(-3)))
+    print(solution := solve_easy_iteration(matrix_s, vector_s, min(eps)/(1 - min(eps)) * 10**(-4)))
     cont_sol(solution)
     print()
     print('Метод Зейделя')
-    print(solution := solve_zeidel(matrix_s, vector_s, min(eps) * 10**(-3)))
+    print(solution := solve_zeidel(matrix_s, vector_s, min(eps)/(1 - min(eps)) * 10**(-4)))
     cont_sol(solution)
     print()
 

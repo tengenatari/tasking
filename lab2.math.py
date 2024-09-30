@@ -35,26 +35,31 @@ def solve_easy_iteration(matrix: list[list], vector: list, eps):
     while True:
         cnt += 1
         for i in range(len(matrix)):
-            new_x[i] = sum(list(map(lambda z, y: z*y, matrix[i], new_x))) + vector[i]
+            new_x[i] = sum(list(map(lambda z, y: z*y, matrix[i], x))) + vector[i]
 
         if min(first_and_inf_norma([subtract_vectors(new_x, x)])) < eps:
             print("Количество итераций", cnt)
             return new_x
         x = copy.deepcopy(new_x)
 
+
 def solve_zeidel(matrix: list[list], vector: list, eps):
+
     x = [vector[i] for i in range(len(vector))]
     new_x = [vector[i] for i in range(len(vector))]
     cnt = 0
     while True:
         cnt += 1
         for i in range(len(matrix)):
-            new_x[i] = sum(list(map(lambda z, y: z * y, matrix[i], new_x))) + vector[i]
+            new_x[i] = (sum(list(map(lambda z, y: z * y, matrix[i][:i], new_x[:i]))) +
+                        sum(list(map(lambda z, y: z * y, matrix[i][i:], x[i:]))) +
+                        vector[i])
 
         if min(first_and_inf_norma([subtract_vectors(new_x, x)])) < eps:
             print("Количество итераций", cnt)
             return new_x
         x = copy.deepcopy(new_x)
+
 
 def count_nevyazka(vector: list, matrix: list[list], b):
     new_vector = copy.deepcopy(b)
@@ -117,7 +122,7 @@ def gauss_solution_wme(matrix, vector):
     return solution_vector
 
 
-def main():
+def main(easy=True):
     print('Вводим размерность матрицы')
     n = int(input())
     print()
@@ -142,29 +147,47 @@ def main():
     print(eps := first_and_inf_norma(matrix_s))
     print()
 
+    def cont_sol(solution):
+        print('Считаем неувязочку')
+
+        print(count_nevyazka(solution, matrix, vector))
+
+        print()
+        print('Решаем методом гаусса с выбором главного элемента')
+
+        print(abs_solution := gauss_solution_wme(matrix, vector))
+        print()
+        print('Считаем неувязочку для Гаусса')
+
+        print(count_nevyazka(abs_solution, matrix, vector))
+        print()
+        print('dx')
+        print(sub_vec := subtract_vectors(abs_solution, solution))
+        print()
+        print('Абсолютная погрешность')
+        print(first_and_inf_norma([sub_vec])[0])
+        print()
+        print('Относительная погрешность')
+        print(first_and_inf_norma([sub_vec])[0] / first_and_inf_norma([abs_solution])[0])
+        print()
+        print('')
+
     print('Решаем систему уравнений')
+
+    print('Метод простых итераций')
     print(solution := solve_easy_iteration(matrix_s, vector_s, min(eps) * 10**(-3)))
-
-    print('Считаем неувязочку')
-
-    print(count_nevyazka(solution, matrix, vector))
-
-    print('Решаем методом гаусса с выбором главного элемента')
-
-    print(abs_solution := gauss_solution_wme(matrix, vector))
-
-    print('Считаем неувязочку для Гаусса')
-
-    print(count_nevyazka(abs_solution, matrix, vector))
-    print('dx')
-    print(sub_vec := subtract_vectors(abs_solution, solution))
-    print('Абсолютная погрешность')
-    print(first_and_inf_norma(sub_vec)[0])
-    print('Относительная погрешность')
-    print(first_and_inf_norma(sub_vec)[0]/first_and_inf_norma(abs_solution)[0])
-    print('')
+    cont_sol(solution)
+    print()
+    print('Метод Зейделя')
+    print(solution := solve_zeidel(matrix_s, vector_s, min(eps) * 10**(-3)))
+    cont_sol(solution)
+    print()
 
 
-main()
+
+
+
+main(easy=False)
+
 
 

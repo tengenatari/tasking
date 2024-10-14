@@ -17,6 +17,19 @@ def f_x_second(x):
     return -1/(x**2 * math.log(2))
 
 
+def phi_lambda(x):
+    global lambda_
+    return (-math.log(x, 2) - 5)/lambda_ + x
+
+
+def phi_x(x):
+    return (-math.log(x, 2) - 5) / math.e**(1/x**(1/3)) + x
+
+
+def phi_x_first(x):
+    return 1 + 5/(x*math.log(x, 2)**2)
+
+
 def bisection_method(f, a, b, eps):
     count = 0
     while b - a > eps:
@@ -81,13 +94,23 @@ def secant_method(f, f_, f__, a, b, eps):
     return x_new, count
 
 
+def easy_iter_method(f, f_, f__, a, b, eps):
+    count = 1
+    x_prev = a
+    x = f(a)
+    print(x)
+    while abs(x - x_prev) > eps:
+        count += 1
+        x_prev = x
 
-
+        x = f(x_prev)
+        print(x)
+    return x, count
 
 
 def main():
     a = 1 / 64
-    b = 16
+    b = 1
     eps = 0.0001
     print('Метод половинного деления')
     x, k = bisection_method(f_x, a, b, eps)
@@ -107,8 +130,30 @@ def main():
     print('Значение f(x):', f_x(x))
     print('Число итераций:', k)
     print()
-    print('Метод Ньютона')
+    print('Метод секущих')
     x, k = secant_method(f_x, f_x_first, f_x_second, a, b, eps)
+    print('Значение x:', x)
+    print('Значение f(x):', f_x(x))
+    print('Число итераций:', k)
+    print()
+    print('Метод Итераций с моим phi')
+    x, k = easy_iter_method(phi_x, f_x_first, f_x_second, a, 1-eps, eps)
+    print('Значение x:', x)
+    print('Значение f(x):', f_x(x))
+    print('Число итераций:', k)
+    print()
+    print('Метод Итераций с phi, где lambda = 1/alpha')
+    global lambda_
+    lambda_ = 64
+
+    x, k = easy_iter_method(phi_lambda, f_x_first, f_x_second, a, 1 - eps, eps)
+    print('Значение x:', x)
+    print('Значение f(x):', f_x(x))
+    print('Число итераций:', k)
+    print()
+    print('Метод Итераций с phi, где lambda = 2/(y+a)')
+    lambda_ = (1+a)/2
+    x, k = easy_iter_method(phi_lambda, f_x_first, f_x_second, a, 1 - eps, eps)
     print('Значение x:', x)
     print('Значение f(x):', f_x(x))
     print('Число итераций:', k)

@@ -142,17 +142,17 @@ def main():
     print('Значение f(x):', f_x(x))
     print('Число итераций:', k)
     print()
-    print('Метод Итераций с phi, где lambda = 1/alpha')
+    print('Метод Итераций с phi, где lambda = 1/gamma, gamma = 32')
     global lambda_
-    lambda_ = 64
+    lambda_ = 32
 
     x, k = easy_iter_method(phi_lambda, f_x_first, f_x_second, a, 1 - eps, eps)
     print('Значение x:', x)
     print('Значение f(x):', f_x(x))
     print('Число итераций:', k)
     print()
-    print('Метод Итераций с phi, где lambda = 2/(y+a)')
-    lambda_ = (1+a)/2
+    print('Метод Итераций с phi, где lambda = 2/(y+a), y= 96, a = 32')
+    lambda_ = (96 + 32)/2
     x, k = easy_iter_method(phi_lambda, f_x_first, f_x_second, a, 1 - eps, eps)
     print('Значение x:', x)
     print('Значение f(x):', f_x(x))

@@ -152,6 +152,7 @@ def main(easy=True):
     print()
 
     print('Считаем норму для матрицы')
+
     print(eps := first_and_inf_norma(matrix_s))
     print()
 
@@ -186,11 +187,13 @@ def main(easy=True):
     print('q = ', eps)
     print(solution := solve_easy_iteration(matrix_s, vector_s, (1 - min(eps))/min(eps) * 10**(-4)))
     cont_sol(solution)
+    print('eps:', 10**(-4))
     print()
     print('Метод Зейделя')
     eps = mu(matrix_s)
     print('mu', eps)
     print(solution := solve_zeidel(matrix_s, vector_s, (1 - eps)/eps * 10**(-4)))
+    print('eps', 10**(-4))
     cont_sol(solution)
     print()
 

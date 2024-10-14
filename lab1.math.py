@@ -297,3 +297,4 @@ print(sol_vec)
 
 print('невязка')
 print(vector_nev := count_nevyazka(sol_vec, matrixxx, 0, vec))
+print(count_nevyazka(*gauss_solution(matrixxx, vec)))

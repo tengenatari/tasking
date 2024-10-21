@@ -98,13 +98,13 @@ def easy_iter_method(f, f_, f__, a, b, eps):
     count = 1
     x_prev = a
     x = f(a)
-    print(x)
+
     while abs(x - x_prev) > eps:
         count += 1
         x_prev = x
 
         x = f(x_prev)
-        print(x)
+
     return x, count
 
 

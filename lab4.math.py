@@ -36,14 +36,14 @@ def R_max(x, points, f_b):
 
 
 def main():
-    x = np.linspace(0, 10, 101)
+    x = np.linspace(0, 10, 21)
     y = np.exp(x)
 
     plt.figure(figsize=(8, 6), dpi=80)
 
     plt.subplot(3, 1, 1)
 
-    plt.title('Лагранж отрезок [1, 9], h = $\\frac{10}{100}$')
+    plt.title('Лагранж отрезок [0, 10], h = $\\frac{10}{100}$')
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
@@ -71,7 +71,7 @@ def main():
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(9, 10, 351)
+    x_ = np.linspace(9, 10, 151)
     plt.plot(x_, lagranzh(x, y, x_), color=colors[3], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
 
@@ -81,7 +81,7 @@ def main():
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(0, 1, 351)
+    x_ = np.linspace(0, 1, 151)
     plt.plot(x_, lagranzh(x, y, x_), color=colors[4], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
 
@@ -89,7 +89,7 @@ def main():
     plt.show()
 
     print('R(0.1) = ', R(x, 0.1, np.exp(10)))
-    print('R(x) max = ', R_max(x, x_, np.exp(10)))
+    print("R(x') max = ", R_max(x, x_, np.exp(10)))
     print('R(0) = ', R(x, 0, np.exp(10)))
 
 main()

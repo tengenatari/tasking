@@ -3,6 +3,38 @@ import math
 from matplotlib import pyplot as plt
 import matplotlib as mpl
 import numpy as np
+
+
+class NewtonInt:
+    def __init__(self, func, n):
+        self.table = np.zeros(shape=(n, n + 1))
+        x = np.linspace(0, 10, n + 1)
+        self.table[0] = func(x)
+        self.n = n
+        self.x0 = 0
+        self.h = x[1] - x[0]
+        for i in range(1, n + 1):
+            for j in range(1, n - i):
+                self.table[i][j - 1] = self.table[i - 1][j] - self.table[i - 1][j - 1]
+        print(self.table)
+    def calculate_points(self, points):
+        ans = []
+        for k in range(len(points)):
+            sum = 0
+            q =  (points[k] - self.x0)/self.h
+            for i in range(0, self.n + 1):
+                p = 1
+
+                for j in range(self.n + 1):
+                    p *= (q - j)
+                sum += p *  self.table[0][i]/ math.factorial(i)
+            ans.append(sum)
+        return ans
+
+
+
+
+
 def lagranzh(x, y, points):
 
     ans = np.array([])
@@ -42,12 +74,12 @@ def main():
     plt.figure(figsize=(8, 6), dpi=80)
 
     plt.subplot(3, 1, 1)
-
-    plt.title('Лагранж отрезок [0, 10], h = $\\frac{10}{100}$')
+    plt.title('Лагранж')
+    plt.title('Отрезок [0, 10], h = $\\frac{10}{20}$')
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(0, 10, 101)
+    x_ = np.linspace(0, 10, 151)
     plt.plot(x, y, color=colors[1], label='$\\exp(x)$')
     plt.plot(x_, lagranzh(x, y, x_), color=colors[5], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
@@ -56,7 +88,7 @@ def main():
 
     plt.subplot(3, 1, 2)
 
-    plt.title('Лагранж отрезок [1, 9], h = $\\frac{8}{150}$')
+    plt.title('Отрезок [1, 9], h = $\\frac{8}{150}$')
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
@@ -67,7 +99,7 @@ def main():
 
     plt.subplot(3, 2, 5)
 
-    plt.title('Лагранж отрезок [9, 10], h = $\\frac{1}{150}$')
+    plt.title('Отрезок [9, 10], h = $\\frac{1}{150}$')
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
@@ -77,7 +109,7 @@ def main():
 
     plt.subplot(3, 2, 6)
 
-    plt.title('Лагранж отрезок [0, 1], h = $\\frac{1}{150}$')
+    plt.title('Отрезок [0, 1], h = $\\frac{1}{150}$')
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
@@ -92,4 +124,13 @@ def main():
     print("R(x') max = ", R_max(x, x_, np.exp(10)))
     print('R(0) = ', R(x, 0, np.exp(10)))
 
-main()
+def newton():
+    inter = NewtonInt(np.exp, 10)
+
+
+    x_ = np.linspace(2, 8, 151)
+    y =  inter.calculate_points(x_)
+    plt.plot(x_, y, color=colors[5], label='$L_{' + str(len(x_) - 1) + '}(x)$')
+    plt.legend()
+    plt.show()
+newton()

@@ -21,15 +21,25 @@ colors = plt.cm.jet(np.linspace(0,1,10))
 
 def P(x, point):
     p = 1
-    for x in range(len(x)):
+    for i in range(len(x)):
         p *= point - x[i]
     return abs(p)
+
+
 def R(x, point, f_b):
-    return f_b/math.factorial(len(x)) * P(x, point)
+    return abs(f_b/math.factorial(len(x)) * P(x, point))
+def R_max(x, points, f_b):
+    max_ = []
+    for i in range(len(points)):
+        max_.append(R(x, points[i], f_b))
+    return max(max_)
+
 
 def main():
-    x = np.linspace(0, 10, 100)
+    x = np.linspace(0, 10, 101)
     y = np.exp(x)
+
+    plt.figure(figsize=(8, 6), dpi=80)
 
     plt.subplot(3, 1, 1)
 
@@ -37,9 +47,9 @@ def main():
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(0, 10, 100)
+    x_ = np.linspace(0, 10, 101)
     plt.plot(x, y, color=colors[1], label='$\\exp(x)$')
-    plt.plot(x_, lagranzh(x, y, x_), color=colors[5], label='$L_{' + str(len(x)) + '}(x)$')
+    plt.plot(x_, lagranzh(x, y, x_), color=colors[5], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
 
 
@@ -50,9 +60,9 @@ def main():
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(1, 9, 150)
+    x_ = np.linspace(1, 9, 151)
     plt.plot(x, y, color=colors[1], label='$\\exp(x)$')
-    plt.plot(x_, lagranzh(x, y, x_), color=colors[5], label='$L_{' + str(len(x)) + '}(x)$')
+    plt.plot(x_, lagranzh(x, y, x_), color=colors[5], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
 
     plt.subplot(3, 2, 5)
@@ -61,8 +71,8 @@ def main():
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(9, 10, 150)
-    plt.plot(x_, lagranzh(x, y, x_), color=colors[3], label='$L_{' + str(len(x)) + '}(x)$')
+    x_ = np.linspace(9, 10, 351)
+    plt.plot(x_, lagranzh(x, y, x_), color=colors[3], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
 
     plt.subplot(3, 2, 6)
@@ -71,12 +81,15 @@ def main():
     plt.xlabel('x')
     plt.ylabel('$\\exp(x)$')
 
-    x_ = np.linspace(0, 1, 150)
-    plt.plot(x_, lagranzh(x, y, x_), color=colors[4], label='$L_{' + str(len(x)) + '}(x)$')
+    x_ = np.linspace(0, 1, 351)
+    plt.plot(x_, lagranzh(x, y, x_), color=colors[4], label='$L_{' + str(len(x) - 1) + '}(x)$')
     plt.legend()
 
     plt.tight_layout()
     plt.show()
 
+    print('R(0.1) = ', R(x, 0.1, np.exp(10)))
+    print('R(x) max = ', R_max(x, x_, np.exp(10)))
+    print('R(0) = ', R(x, 0, np.exp(10)))
 
 main()

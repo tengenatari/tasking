@@ -43,14 +43,24 @@ class TrioInterpolation:
         self.points = None
         self.func = None
         self.step = 0
+        self.a = None
+        self.b = None
+        self.c = None
+        self.d = None
     def build(self, x, y):
         self.step = x[1] - x[0]
         self.points = x
-        self.matrix = np.array((len(x), len(x)))
-        for i in range(1, len(x) - 1):
+        self.matrix = np.array((len(x) + 1, len(x) + 1))
+        self.matrix[0][0] = self.matrix[-1][-2] = self.step
+        self.matrix[0][1] = self.matrix[-1][-1] = self.step
+        self.ma
+        for i in range(1, len(x)):
             self.matrix[i][i - 1] = self.matrix[i][i + 1] = self.step
             self.matrix[i][i] = self.step
             self.matrix[i][-1] = 3*(y[i - 1] - 2*y[i] +y[i + 1])/self.step
+
+        self.c, _, _ =gauss_solution(list(self.matrix))
+
 
 
 

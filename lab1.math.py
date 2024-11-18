@@ -76,7 +76,7 @@ def first_move(matrix: list[list]):
     for i in range(len(matrix)):
         matrix, flag = pick_row(matrix, i)
         if not flag:
-            print('Many solutions')
+
             return matrix
         for j in range(i + 1, len(matrix)):
             el_ = matrix[j][i]
@@ -140,18 +140,14 @@ def gauss_solution(mat: list[list] = None, vec: list = None):
     mat = first_move(merge_mat_vec(mat, vec))
     mat1 = copy.deepcopy(mat)
 
-    print('Прямой ход')
-    for row in mat:
-        print(*row)
-    print('Обратный ход')
+
     mat = second_move(mat)
 
-    for row in mat:
-        print(*row)
+
     solution_vector = []
     for x in mat:
         solution_vector.append(x[-1])
-    print('Solution vector:', solution_vector)
+
     return solution_vector, matrix, mat1, vec
 
 

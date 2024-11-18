@@ -68,7 +68,11 @@ def R_max(x, points, f_b):
 
 
 def main():
-    x = np.linspace(0, 10, 21)
+
+
+
+
+    x = np.linspace(0, 10, 150)
     y = np.exp(x)
 
     plt.figure(figsize=(8, 6), dpi=80)
@@ -127,9 +131,9 @@ def main():
 
 
 def newton():
-    inter = NewtonInt(np.exp, 10, 0, 10)
-    x = np.linspace(0, 10, 10)
-    x_ = np.linspace(0, 10, 101)
+    inter = NewtonInt(np.exp, 10, 0, 5)
+    x = np.linspace(0, 10, 3)
+    x_ = np.linspace(0, 10, 100)
     y = inter.calculate_points(x_)
     plt.plot(x_, y, color=colors[9], label='$L_{Newton}(x)$')
     plt.plot(x_, np.exp(x_), color=colors[7], label='$L_{Newton}(x)$')
@@ -139,4 +143,4 @@ def newton():
     plt.legend()
     plt.show()
 
-newton()
+main()

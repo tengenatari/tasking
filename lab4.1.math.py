@@ -49,7 +49,7 @@ class TrioInterpolation:
         self.d = None
     def build(self, x, y):
         self.step = x[1] - x[0]
-        self.points = list(x)
+        self.points = x
         self.matrix = [[0]*(len(x) + 1) for _ in range(len(x))]
 
         #вычисление c
@@ -60,8 +60,7 @@ class TrioInterpolation:
             self.matrix[i][i - 1] = self.matrix[i][i + 1] = self.step
             self.matrix[i][i] = 4*self.step
             self.matrix[i][-1] = 3*(y[i - 1] - 2*y[i] +y[i + 1])/self.step
-        for _ in range(len(self.matrix)):
-            print(*self.matrix[_])
+
         self.c, _, _ =gauss_solution(list(self.matrix))
 
         #вычисление d
@@ -86,23 +85,18 @@ class TrioInterpolation:
             self.a.append(y[i - 1])
 
     def get_points(self, points):
-        points.sort()
+
         y = []
         for x in points:
-            i = self.points.index(x)
-            y.append(self.a[i] + self.b[i]*x + self.c[i]*x**2 + self.d[i]*x**3)
+            i = self.points.flat[np.abs(self.points - x).argmin()]
+            i = np.where(self.points == i)[0][0]
+            print(i)
+
+            y.append(self.a[i] + self.b[i]*(x - self.points[i]) + self.c[i]*(x - self.points[i])**2 + self.d[i]*(x - self.points[i])**3)
         return y
 
-trio = TrioInterpolation()
-trio.build([1.1, 2.2 ,3.3 ,4.4,5.5 ,6.6], [1.1, 2.5,3.9,4.1,5.1,6])
 
-
-
-
-
-
-
-x_0 = np.arange(0, 10, 0.1)
+x_0 = np.arange(1, 10, 0.1)
 
 sin_x_0 = np.sin(x_0)
 
@@ -116,16 +110,27 @@ lin.build(x_0, sin_x_0)
 plt.figure(figsize=(8, 6), dpi=80)
 
 plt.subplot(3, 1, 1)
-print(x_0)
-print(sin_x_0)
-plt.plot(x_0, sin_x_0, color="red")
-plt.plot(np.arange(0, 10, 1), lin.get_points(np.arange(0, 10, 1)), color="orange")
+
+plt.plot(x_0, sin_x_0)
 
 plt.subplot(3, 1, 2)
-print(x_0)
-print(sin_x_0)
-plt.plot(x_0, sin_x_0)
-plt.plot(np.arange(0, 10, 1), tim.get_points(np.arange(1, 10, 0.1)), color="orange")
+
+
+print(tim.points)
+print(tim.a)
+print(tim.b)
+print(tim.c)
+print(tim.d)
+
+test_x = np.linspace(1, 9, 2000)
+plt.plot(test_x, tim.get_points(test_x), color="orange")
+
+
+# print(lin.get_points(np.arange(0, 10, 1)))
+
+plt.subplot(3, 1, 3)
+plt.plot(test_x, np.sin(test_x) - tim.get_points(test_x))
+print(tim.get_points(np.linspace(1, 9, 20)))
+
 plt.tight_layout()
 plt.show()
-print(lin.get_points(np.arange(0, 10, 1)))
